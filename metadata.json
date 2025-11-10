@@ -1,0 +1,8 @@
+{
+  "name": "Elite Conversational AI",
+  "description": "An advanced conversational interface that generates procedural UI, adapts to user personality, and supports real-time voice interaction using the Gemini Live API.",
+  "requestFramePermissions": [
+    "microphone",
+    "geolocation"
+  ]
+}
