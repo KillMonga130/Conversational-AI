@@ -1,4 +1,3 @@
-
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import { eliteAI } from "../services/eliteConversationalAIService";
 import { ProceduralUIRenderer } from "./ProceduralUIRenderer";
@@ -158,7 +157,15 @@ export const EliteInterface: React.FC = () => {
   };
 
   return (
-    <div className="w-full h-full">
+    <div className="w-full h-full relative">
+      <div className="absolute top-5 left-5 z-20 flex items-center gap-3 animate-fade-in-main">
+        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" className="text-white opacity-90">
+          <path d="M12 2C6.477 2 2 6.477 2 12C2 17.523 6.477 22 12 22C17.523 22 22 17.523 22 12C22 6.477 17.523 2 12 2Z" stroke="currentColor" strokeWidth="1.5" strokeOpacity="0.5"></path>
+          <path d="M7 12C7 9.23858 9.23858 7 12 7C14.7614 7 17 9.23858 17 12C17 14.7614 14.7614 17 12 17" stroke="currentColor" strokeWidth="1.5"></path>
+          <path d="M12 12C12 10.8954 11.1046 10 10 10" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"></path>
+        </svg>
+        <span className="text-xl font-semibold text-white/90 hidden md:block">Elite AI</span>
+      </div>
       {!isActive ? (
         <div className="flex flex-col items-center justify-center h-full text-center p-4">
           <h1 className="text-4xl md:text-6xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-red-600 mb-4 animate-fade-in-main">
@@ -177,7 +184,7 @@ export const EliteInterface: React.FC = () => {
           {error && <p className="text-red-400 mt-4 animate-fade-in-main">{error}</p>}
         </div>
       ) : (
-        <div className="grid grid-rows-[1fr_auto] md:grid-rows-1 md:grid-cols-[2fr_1fr] gap-5 h-full p-5">
+        <div className="grid grid-rows-[1fr_auto] md:grid-rows-1 md:grid-cols-[2fr_1fr] gap-5 h-full p-5 pt-20 md:pt-5">
           <div className="relative w-full h-full bg-black bg-opacity-20 rounded-2xl overflow-hidden animate-fade-in-main">
              <ProceduralUIRenderer
                 spec={currentUISpec}

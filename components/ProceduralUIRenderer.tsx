@@ -1,5 +1,4 @@
-
-import React from "react";
+import React, { useState } from "react";
 import type { ProceduralUISpec, UIElement } from '../types';
 
 interface ProceduralUIRendererProps {
@@ -19,7 +18,9 @@ const getLayoutClassName = (layout: string) => {
   }
 };
 
-const getAnimationClassName = (animation?: string) => {
+const getAnimationClassName = (animation?: string, animationsEnabled: boolean = true) => {
+    if (!animationsEnabled) return '';
+
     if (!animation) return 'animate-fade-in-main';
     const mapping: Record<string, string> = {
         "fade-in": "animate-fade-in-main",
@@ -73,6 +74,8 @@ const RenderedElement: React.FC<{ elem: UIElement; onClick: (id: string, value?:
 
 
 export const ProceduralUIRenderer: React.FC<ProceduralUIRendererProps> = ({ spec, onElementClick, personalizations }) => {
+  const [animationsEnabled, setAnimationsEnabled] = useState(true);
+
   if (!spec) {
     return (
         <div className="w-full h-full flex items-center justify-center">
@@ -90,7 +93,7 @@ export const ProceduralUIRenderer: React.FC<ProceduralUIRendererProps> = ({ spec
 
   return (
     <div
-      className={`w-full h-full p-4 overflow-auto ${layoutClassName}`}
+      className={`relative w-full h-full p-4 overflow-auto ${layoutClassName}`}
       style={{
         gap: `${personalizedSpec.theme.spacing}px`,
         fontFamily: personalizedSpec.theme.typography.family,
@@ -98,12 +101,26 @@ export const ProceduralUIRenderer: React.FC<ProceduralUIRendererProps> = ({ spec
         borderRadius: `${personalizedSpec.theme.borderRadius}px`,
       }}
     >
+      <div className="absolute top-3 right-4 z-10 flex items-center space-x-2 text-white bg-black/30 backdrop-blur-sm p-2 rounded-full">
+          <span className="text-sm font-medium pr-1" id="animation-toggle-label">Animations</span>
+          <label htmlFor="animation-toggle" className="relative inline-flex items-center cursor-pointer">
+              <input
+                  type="checkbox"
+                  id="animation-toggle"
+                  className="sr-only peer"
+                  checked={animationsEnabled}
+                  onChange={() => setAnimationsEnabled(!animationsEnabled)}
+                  aria-labelledby="animation-toggle-label"
+              />
+              <div className="w-11 h-6 bg-gray-600 rounded-full peer peer-focus:ring-2 peer-focus:ring-blue-500 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all peer-checked:bg-blue-600"></div>
+          </label>
+      </div>
       {personalizedSpec.elements.map((elem) => {
         if (personalizedSpec.layout === 'floating') {
           return (
             <div
               key={elem.id}
-              className={`absolute ${getAnimationClassName(elem.animation)}`}
+              className={`absolute ${getAnimationClassName(elem.animation, animationsEnabled)}`}
               style={{
                 left: `${elem.position.x}%`,
                 top: `${elem.position.y}%`,
@@ -115,7 +132,7 @@ export const ProceduralUIRenderer: React.FC<ProceduralUIRendererProps> = ({ spec
           );
         }
         return (
-            <div key={elem.id} className={`${getAnimationClassName(elem.animation)}`}>
+            <div key={elem.id} className={`${getAnimationClassName(elem.animation, animationsEnabled)}`}>
               <RenderedElement elem={elem} onClick={onElementClick} theme={personalizedSpec.theme} />
             </div>
         )
